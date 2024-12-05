@@ -26,6 +26,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.extern.slf4j.Slf4j;
@@ -84,7 +85,7 @@ public class VehicleTripService {
 			vehicleId = vehicleTripsForApplication.get(0).getVehicle().getId();
 
 		}
-		if (vehicleId != fsmRequest.getFsm().getVehicleId()) {
+		if (vehicleId != null && !vehicleId.equalsIgnoreCase(fsmRequest.getFsm().getVehicleId())) {
 
 			decreaseTripWhileUpdate(fsmRequest, fsm, oldNumberOfTrips);
 			increaseUpdateTripDetails(fsmRequest.getFsm().getNoOfTrips(), fsmRequest, fsm);
@@ -156,21 +157,6 @@ public class VehicleTripService {
 		VehicleTripResponse vehicleTripResponse = new VehicleTripResponse();
 		updateCreatedVehicleTrip(fsmRequest, vehicleTripResponse, vehicleTripsList, createUri);
 
-				VehicleTripRequest tripRequest = VehicleTripRequest.builder().vehicleTrip(vehicleTripsList)
-						.requestInfo(fsmRequest.getRequestInfo())
-						.workflow(Workflow.builder().action(FSMConstants.TRIP_READY_FOR_DISPOSAL).build()).build();
-
-				serviceRequestRepository.fetchResult(createUri, tripRequest);
-
-			} else {
-				serviceRequestRepository.fetchResult(createUri, VehicleTripRequest.builder()
-						.vehicleTrip(vehicleTripsList).requestInfo(fsmRequest.getRequestInfo()).build());
-
-			}
-
-		} catch (IllegalArgumentException e) {
-			throw new CustomException("IllegalArgumentException", "ObjectMapper not able to convertValue in userCall");
-		}
 	}
 
 	private void updateCreatedVehicleTrip(FSMRequest fsmRequest, VehicleTripResponse vehicleTripResponse,
@@ -229,6 +215,7 @@ public class VehicleTripService {
 				scheduledTripDetail.setVolume(fsmRequest.getFsm().getWasteCollected());
 				scheduledTripDetail.setItemStartTime(Calendar.getInstance().getTimeInMillis());
 				scheduledTripDetail.setItemEndTime(Calendar.getInstance().getTimeInMillis() + 100000);
+
 				vehicleTripList.add(scheduledTrip);
 			});
 

@@ -19,6 +19,12 @@ public class OtpRepository {
     private final RestTemplate restTemplate;
     private final String otpSearchEndpoint;
     private final String otpValidateEndpoint;
+    
+    @Value("${citizen.login.password.otp.fixed.enabled}")
+    private boolean defaultOtpEnabled;
+    
+    @Value("${citizen.login.password.otp.fixed.value}")
+    private String defaultOtp;
 
     @Autowired
     public OtpRepository(@Value("${egov.otp.host}") String otpServiceHost,
@@ -51,6 +57,9 @@ public class OtpRepository {
      * @return
      */
     public boolean validateOtp(OtpValidateRequest request) {
+    	if(defaultOtpEnabled && request.getOtp().getOtp().equals(defaultOtp)) {
+    		return true;
+    	}
         try {
             OtpResponse otpResponse = restTemplate.postForObject(otpValidateEndpoint, request, OtpResponse.class);
             if (null != otpResponse && null != otpResponse.getOtp())

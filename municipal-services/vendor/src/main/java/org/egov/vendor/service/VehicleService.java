@@ -190,27 +190,5 @@ public class VehicleService {
 		}
 
 	}
-	
-	private Vehicle updateVehicle(Vehicle vehicle, RequestInfo requestInfo) {
-		StringBuilder uri = new StringBuilder();
-		uri.append(config.getVehicleHost()).append(config.getVehicleContextPath()).append(config.getVehicleUpdateEndpoint());
-		VehicleRequest vehicleRequest = VehicleRequest.builder().RequestInfo(requestInfo).vehicle(vehicle).build();
-		try {
-			
-			LinkedHashMap responseMap = (LinkedHashMap) serviceRequestRepository.fetchResult(uri, vehicleRequest);
-			VehicleResponse vehicleResponse = mapper.convertValue(responseMap, VehicleResponse.class);
-			if(vehicleResponse.getVehicle() != null && vehicleResponse.getVehicle().size() >0) {
-				return vehicleResponse.getVehicle().get(0);
-			}else {
-				throw new CustomException(VendorConstants.UPDATE_VEHICLE_ERROR, "Could not Update vehicle");
-			}
-			
-		} catch (IllegalArgumentException e) {
-			throw new CustomException("IllegalArgumentException", "ObjectMapper not able to convertValue in userCall");
-		}
-		
-		
-		
-	}
 
 }

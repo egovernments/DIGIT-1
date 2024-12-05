@@ -56,9 +56,6 @@ public class FSMRepository {
 
 	@Autowired
 	private FSMAuditRowMapper auditRowMapper;
-	
-	@Autowired
-	private  FSMUtil fsmUtil;
 
 	@Autowired
 	private TripDetailRowMapper detailMapper;

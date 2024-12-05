@@ -10,7 +10,7 @@ import org.egov.user.domain.model.SecureUser;
 import org.egov.user.domain.model.User;
 import org.egov.user.domain.model.enums.UserType;
 import org.egov.user.domain.service.UserService;
-import org.egov.user.domain.service.utils.EncryptionDecryptionUtil;
+//import org.egov.user.domain.service.utils.EncryptionDecryptionUtil;
 import org.egov.user.web.contract.auth.Role;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -45,8 +45,8 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
 
     private UserService userService;
 
-    @Autowired
-    private EncryptionDecryptionUtil encryptionDecryptionUtil;
+//    @Autowired
+//    private EncryptionDecryptionUtil encryptionDecryptionUtil;
 
     @Value("${citizen.login.password.otp.enabled}")
     private boolean citizenLoginPasswordOtpEnabled;
@@ -77,6 +77,7 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
 
         String tenantId = details.get("tenantId");
         String userType = details.get("userType");
+        boolean otpLogin = details.get("otp")!=null && details.get("otp").equalsIgnoreCase("Y")?true:false;
 
         if (isEmpty(tenantId)) {
             throw new OAuth2Exception("TenantId is mandatory");
@@ -88,7 +89,7 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
         User user;
         RequestInfo requestInfo;
         try {
-            user = userService.getUniqueUser(userName, tenantId, UserType.fromValue(userType));
+            user = userService.getUniqueUser(userName, tenantId, otpLogin, UserType.fromValue(userType));
             /* decrypt here otp service and final response need decrypted data*/
             Set<org.egov.user.domain.model.Role> domain_roles = user.getRoles();
             List<org.egov.common.contract.request.Role> contract_roles = new ArrayList<>();
@@ -99,7 +100,7 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
             org.egov.common.contract.request.User userInfo = org.egov.common.contract.request.User.builder().uuid(user.getUuid())
                     .type(user.getType() != null ? user.getType().name() : null).roles(contract_roles).build();
             requestInfo = RequestInfo.builder().userInfo(userInfo).build();
-            user = encryptionDecryptionUtil.decryptObject(user, "UserSelf", User.class, requestInfo);
+//            user = encryptionDecryptionUtil.decryptObject(user, "UserSelf", User.class, requestInfo);
 
         } catch (UserNotFoundException e) {
             log.error("User not found", e);
@@ -135,7 +136,7 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
                 //for automation allow fixing otp validation to a fixed otp
                 isPasswordMatched = true;
             } else {
-                isPasswordMatched = isPasswordMatch(citizenLoginPasswordOtpEnabled, password, user, authentication);
+                isPasswordMatched = isPasswordMatch(citizenLoginPasswordOtpEnabled && otpLogin, password, user, authentication);
             }
         } else {
             isPasswordMatched = isPasswordMatch(employeeLoginPasswordOtpEnabled, password, user, authentication);

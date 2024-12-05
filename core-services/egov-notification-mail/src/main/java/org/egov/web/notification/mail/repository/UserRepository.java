@@ -1,8 +1,6 @@
 package org.egov.web.notification.mail.repository;
 
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import org.egov.tracer.model.CustomException;
 import org.egov.web.notification.mail.config.ApplicationConfiguration;

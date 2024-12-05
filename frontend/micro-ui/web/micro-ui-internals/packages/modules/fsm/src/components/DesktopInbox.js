@@ -205,11 +205,6 @@ const DesktopInbox = (props) => {
             accessor: (row) => row.status,
           },
           {
-            Header: t("ES_INBOX_VEHICLE_STATUS"),
-            disableSortBy: true,
-            accessor: (row) => row.status,
-          },
-          {
             Header: t("ES_INBOX_WASTE_COLLECTED"),
             disableSortBy: true,
             accessor: (row) => row.tripDetails[0]?.volume,

@@ -8,6 +8,7 @@ import org.egov.domain.model.Category;
 @AllArgsConstructor
 public class SMSRequest {
     private String mobileNumber;
+    private String emailId;
     private String message;
     private Category category;
     private long expiryTime;

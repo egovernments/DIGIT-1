@@ -293,6 +293,7 @@ public class UserRepository {
 
         updateuserInputs.put("LastModifiedDate", new Date());
         updateuserInputs.put("LastModifiedBy", userId );
+        updateuserInputs.put("additionaldetails", user.getAdditionalDetails());
         
         updateAuditDetails(oldUser, userId, uuid);
 
@@ -538,6 +539,7 @@ public class UserRepository {
         userInputs.put("createdby", entityUser.getLoggedInUserId());
         userInputs.put("lastmodifiedby", entityUser.getLoggedInUserId());
         userInputs.put("alternatemobilenumber", entityUser.getAlternateMobileNumber());
+        userInputs.put("additionaldetails", entityUser.getAdditionalDetails());
 
         namedParameterJdbcTemplate.update(userTypeQueryBuilder.getInsertUserQuery(), userInputs);
         return entityUser;
@@ -589,6 +591,18 @@ public class UserRepository {
 	
 	private void updateAuditDetails(User oldUser, long userId, String uuid) {
 		auditRepository.auditUser(oldUser,userId,uuid);
+		
+	}
+	
+	public boolean isUserPresent(User user) {
+		String query = userTypeQueryBuilder.getUserPresentByMobileOrEmail();
+        final Map<String, Object> parametersMap = new HashMap<String, Object>();
+        parametersMap.put("emailid", user.getEmailId());
+        parametersMap.put("mobilenumber", user.getMobileNumber());
+        parametersMap.put("tenantId", user.getTenantId());
+        parametersMap.put("userType", user.getType().toString());
+        int count = namedParameterJdbcTemplate.queryForObject(query, parametersMap, Integer.class);
+        return count > 0;
 		
 	}
 

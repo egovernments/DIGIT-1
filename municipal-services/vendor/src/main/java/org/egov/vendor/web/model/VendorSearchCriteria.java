@@ -47,16 +47,6 @@ public class VendorSearchCriteria {
 
 	@JsonProperty("ids")
 	private List<String> ids;
-	
-	@JsonProperty("vehicleCapacity")
-	private String vehicleCapacity;
-	
-	@JsonProperty("status")
-	private List<String> status; 
-
-
-	@JsonProperty("driverIds")
-	private List<String> driverIds; 
 
 	@JsonProperty("vehicleCapacity")
 	private String vehicleCapacity;

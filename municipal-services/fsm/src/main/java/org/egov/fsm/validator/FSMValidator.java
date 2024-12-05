@@ -350,8 +350,6 @@ public class FSMValidator {
 		mdmsValidator.validatePropertyType(fsmRequest.getFsm().getPropertyUsage());
 		validateNoOfTrips(fsmRequest, mdmsData);
 		validateTripAmount(fsmRequest, mdmsData);
-		
-		mdmsValidator.validatePaymentPreference(fsm.getPaymentPreference());
 
 //		mdmsValidator.validatePaymentPreference(fsm.getPaymentPreference());
 
@@ -405,6 +403,7 @@ public class FSMValidator {
 					listOfUpdatedParams.remove(property);
 				});
 			}
+
 			if (listOfUpdatedParams.contains(FSMConstants.APPLICATION_STATUS)) {
 				listOfAllowedUpdatableParams.add(FSMConstants.APPLICATION_STATUS);
 			}
@@ -509,6 +508,7 @@ public class FSMValidator {
 			}
 		}
 	}
+
 	/**
 	 * @param fsmRequest
 	 * @param mdmsData

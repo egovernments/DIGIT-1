@@ -49,7 +49,7 @@ public class UserRepositoryTest {
 
         when(restTemplate.postForObject(any(String.class), any(UserSearchRequest.class), eq(Map.class)))
                 .thenReturn(map);
-        User actualUser = userRepository.fetchUser("123456789", "tenantId", "CITIZEN");
+        User actualUser = userRepository.fetchUser("123456789", null, "tenantId", "CITIZEN");
 
         final User expectedUser = new User(1L, "test@gmail.com", "123456789");
 
@@ -66,7 +66,7 @@ public class UserRepositoryTest {
 
         when(restTemplate.postForObject(any(String.class), any(UserSearchRequest.class), eq(Map.class)))
                 .thenReturn(null);
-        User actualUser = userRepository.fetchUser("123456789", "tenantId", "CITIZEN");
+        User actualUser = userRepository.fetchUser("123456789", null, "tenantId", "CITIZEN");
         assertEquals(actualUser, null);
     }
 
@@ -79,7 +79,7 @@ public class UserRepositoryTest {
 
         when(restTemplate.postForObject(any(String.class), any(UserSearchRequest.class), eq(Map.class)))
                 .thenReturn(map);
-        User actualUser = userRepository.fetchUser("123456789", "tenantId", "CITIZEN");
+        User actualUser = userRepository.fetchUser("123456789", null, "tenantId", "CITIZEN");
         assertEquals(actualUser, null);
     }
 
@@ -93,7 +93,7 @@ public class UserRepositoryTest {
 
         when(restTemplate.postForObject(any(String.class), any(UserSearchRequest.class), eq(Map.class)))
                 .thenReturn(map);
-        User actualUser = userRepository.fetchUser("123456789", "tenantId", "CITIZEN");
+        User actualUser = userRepository.fetchUser("123456789", null, "tenantId", "CITIZEN");
 
         final User expectedUser = new User(2L, "test123@gmail.com", "123456789");
 

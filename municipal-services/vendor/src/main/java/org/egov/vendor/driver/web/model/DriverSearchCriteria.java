@@ -20,6 +20,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @Builder
 public class DriverSearchCriteria {
+
 	@JsonProperty("offset")
 	private Integer offset;
 

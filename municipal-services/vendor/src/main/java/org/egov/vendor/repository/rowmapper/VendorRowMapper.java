@@ -44,8 +44,6 @@ public class VendorRowMapper implements ResultSetExtractor<List<Vendor>> {
 		Map<String, Vendor> vendorMap = new LinkedHashMap<>();
 		this.setFullCount(0);
 
-		this.setFullCount(0);
-
 		while (rs.next()) {
 			Vendor currentvendor = new Vendor();
 			String id = rs.getString("vendor_id");
@@ -60,6 +58,7 @@ public class VendorRowMapper implements ResultSetExtractor<List<Vendor>> {
 			String agencytype = rs.getString("agencytype");
 			String paymentpreference = rs.getString("paymentpreference");
 			this.setFullCount(rs.getInt("full_count"));
+
 			if (currentvendor == null) {
 				if (status == null) {
 					status = "ACTIVE";

@@ -43,11 +43,6 @@ public class VendorRepository {
 	public void save(VendorRequest vendorRequest) {
 		producer.push(configuration.getSaveTopic(), vendorRequest);
 	}
-	
-	public void update(VendorRequest vendorRequest) {
-		producer.push(configuration.getUpdateTopic(), vendorRequest);
-	}
-
 
 	public void update(VendorRequest vendorRequest) {
 		producer.push(configuration.getUpdateTopic(), vendorRequest);

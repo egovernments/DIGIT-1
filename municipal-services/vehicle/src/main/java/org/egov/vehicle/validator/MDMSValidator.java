@@ -31,6 +31,7 @@ public class MDMSValidator {
 		validateIfMasterPresent(masterArray, this.mdmsResMap);
 
 	}
+
 	private void validateIfMasterPresent(String[] masterNames, Map<String, List<String>> codes) {
 		Map<String, String> errorMap = new HashMap<>();
 		for (String masterName : masterNames) {
@@ -41,6 +42,7 @@ public class MDMSValidator {
 		if (!errorMap.isEmpty())
 			throw new CustomException(errorMap);
 	}
+
 	public Map<String, List<String>> getAttributeValues(Object mdmsData) {
 
 		List<String> modulepaths = Arrays.asList(Constants.VEHICLE_JSONPATH_CODE);
@@ -157,60 +159,6 @@ public class MDMSValidator {
 				errorMap.put(VehicleErrorConstants.INVALID_VEHICLE_OWNER, "Vehicle Owner is invalid");
 			}
 
-		} else {
-			errorMap.put(VehicleErrorConstants.INVALID_VEHICLE_OWNER, "Vehicle Owner is invalid");
-		}
-
-		if (!errorMap.isEmpty())
-			throw new CustomException(errorMap);
-	}
-	
-	/**
-	 * validate the existnance of provided property type in MDMS
-	 * @param propertyType
-	 * @throws CustomException
-	 */
-	public void validateVehicleDeclineReason(String vehicleDeclineReason ) throws CustomException{
-		
-		Map<String, String> errorMap = new HashMap<>();
-		
-		List<String> vehicleRejectionReason =  this.mdmsResMap.get(Constants.VEHICLE_DECLINE_REASON);
-		
-		@SuppressWarnings("unchecked")
-		List<Map<String, String>> vehicleRejectionReasonMap = (List<Map<String, String>>) JsonPath.parse(vehicleRejectionReason)
-				.read("$.[?(@.code=='" + vehicleDeclineReason + "')]");
-		if (vehicleRejectionReasonMap != null && vehicleRejectionReasonMap.size() > 0) {
-			Map<String, String> Data = vehicleRejectionReasonMap.get(0);
-			if (!(Data.get("code").equals(vehicleDeclineReason))) {
-				errorMap.put(VehicleErrorConstants.INVALID_VEHICLE_DECLINE_REASON, "Vehicle Decline Reason is invalid");
-			}
-			
-		} else {
-			errorMap.put(VehicleErrorConstants.INVALID_VEHICLE_DECLINE_REASON, "Vehicle Decline Reason is invalid");
-		}
-		if (!errorMap.isEmpty())
-			throw new CustomException(errorMap);
-	}
-	/**
-	 * validate the existence of provided vehicleOwner in MDMS
-	 * @param vehicleOwner
-	 * @throws CustomException
-	 */
-	public void validateVehicleOwner(String vehicleOwner) throws CustomException{
-		
-		Map<String, String> errorMap = new HashMap<>();
-		
-		List<String> vehicleOwners =  this.mdmsResMap.get(Constants.VEHICLE_OWNER_TYPE);
-		
-		@SuppressWarnings("unchecked")
-		List<Map<String, String>> vehicleOwnerMap = (List<Map<String, String>>) JsonPath.parse(vehicleOwners)
-				.read("$.[?(@.code=='" + vehicleOwner + "')]");
-		if (vehicleOwnerMap != null && vehicleOwnerMap.size() > 0) {
-			Map<String, String> Data = vehicleOwnerMap.get(0);
-			if (!(Data.get("code").equals(vehicleOwner))) {
-				errorMap.put(VehicleErrorConstants.INVALID_VEHICLE_OWNER, "Vehicle Owner is invalid");
-			}
-			
 		} else {
 			errorMap.put(VehicleErrorConstants.INVALID_VEHICLE_OWNER, "Vehicle Owner is invalid");
 		}

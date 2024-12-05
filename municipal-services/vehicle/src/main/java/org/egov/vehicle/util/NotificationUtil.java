@@ -86,6 +86,7 @@ public class NotificationUtil {
 				.append("&tenantId=").append(tenantId).append("&module=").append(config.getFsmSearchModule());
 		return uri;
 	}
+
 	/**
 	 * Send the SMSRequest on the SMSNotification kafka topic
 	 * 

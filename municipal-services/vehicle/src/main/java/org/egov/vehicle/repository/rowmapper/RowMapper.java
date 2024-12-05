@@ -68,10 +68,6 @@ public class RowMapper implements ResultSetExtractor<List<Vehicle>> {
 				if (null == status) {
 					status = "ACTIVE";
 				}
-				
-				if(null==status) {
-					status="ACTIVE";
-				}
 
 				currentVehicle = Vehicle.builder().tenantId(tenantId).registrationNumber(registrationNumber)
 						.model(model).type(type).tankCapacity(tankCapicity).suctionType(suctionType)

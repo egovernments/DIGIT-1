@@ -22,6 +22,8 @@ public class Address {
     private String addressType;
     private Long LastModifiedBy;
     private Date LastModifiedDate;
+    private Object additionalDetails;
+    
 
     boolean isInvalid() {
         return isPinCodeInvalid()

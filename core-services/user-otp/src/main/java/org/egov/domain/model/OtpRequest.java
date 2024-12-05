@@ -17,10 +17,11 @@ public class OtpRequest {
     private String tenantId;
     private OtpRequestType type;
     private String userType;
+    private String emailId;
 
     public void validate() {
         if(isTenantIdAbsent()
-				|| isMobileNumberAbsent()
+				|| (isMobileNumberAbsent() && isEmailIdAbsent())
 				|| isInvalidType()
 				|| isMobileNumberNumeric()
 				|| isMobileNumberValidLength()) {
@@ -60,5 +61,9 @@ public class OtpRequest {
 
     public boolean isMobileNumberAbsent() {
         return isEmpty(mobileNumber);
+    }
+    
+    public boolean isEmailIdAbsent() {
+        return isEmpty(emailId);
     }
 }

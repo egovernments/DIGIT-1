@@ -106,13 +106,6 @@
 		</dependency>
 
 		<dependency>
-			<groupId>org.egov</groupId>
-			<artifactId>mdms-client</artifactId>
-			<version>0.0.2-SNAPSHOT</version>
-			<scope>compile</scope>
-		</dependency>
-
-		<dependency>
 			<groupId>org.flywaydb</groupId>
 			<artifactId>flyway-core</artifactId>
 		</dependency>

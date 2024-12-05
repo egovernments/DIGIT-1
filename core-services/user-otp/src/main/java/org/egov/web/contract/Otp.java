@@ -19,6 +19,7 @@ public class Otp {
     private String tenantId;
     private String type;
     private String userType;
+    private String emailId;
 
     @JsonIgnore
     public OtpRequestType getTypeOrDefault() {

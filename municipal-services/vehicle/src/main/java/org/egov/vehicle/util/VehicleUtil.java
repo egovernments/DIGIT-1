@@ -129,6 +129,6 @@ public class VehicleUtil {
 
 		return moduleDtls;
 
-	} 
+	}
 
 }

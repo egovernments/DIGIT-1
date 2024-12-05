@@ -10,6 +10,7 @@ import org.egov.mdms.model.MasterDetail;
 import org.egov.mdms.model.MdmsCriteriaReq;
 import org.egov.mdms.model.ModuleDetail;
 import org.egov.tracer.model.CustomException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -21,6 +22,9 @@ import net.minidev.json.JSONArray;
 @Service
 @Slf4j
 public class MDMSService {
+	@Autowired
+	private MDMSAdminService adminService;
+	
     public Map<String, Map<String, JSONArray>> searchMaster(MdmsCriteriaReq mdmsCriteriaReq) {
 
         Map<String, Map<String, Map<String, JSONArray>>> tenantIdMap = MDMSApplicationRunnerImpl.getTenantMap();
@@ -68,8 +72,14 @@ public class MDMSService {
                 // JSONArray masterData = masters.get(masterDetail.getName());
                 JSONArray masterData = null;
                 try {
-                    masterData = getMasterData(stateLevel, ulbLevel, moduleDetail.getModuleName(),
-                            masterDetail.getName(), tenantId);
+                	if(masterDetail.getName().equalsIgnoreCase("tenants") || masterDetail.getName().equalsIgnoreCase("organizations")) {
+                		masterData = adminService.getOrganization();
+                	} else if(masterDetail.getName().equalsIgnoreCase("offices")) {
+                		masterData = adminService.getOffice();
+                	} else {
+                		masterData = getMasterData(stateLevel, ulbLevel, moduleDetail.getModuleName(),
+                                masterDetail.getName(), tenantId);
+                	}
                 } catch (Exception e) {
                     // TODO Auto-generated catch block
                     log.error("Exception occurred while reading master data", e);

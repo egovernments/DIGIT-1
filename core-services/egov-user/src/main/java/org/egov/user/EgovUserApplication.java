@@ -14,7 +14,7 @@ import org.egov.user.domain.model.Address;
 import org.egov.user.domain.model.Role;
 import org.egov.user.domain.model.User;
 import org.egov.user.domain.model.enums.*;
-import org.egov.user.domain.service.utils.EncryptionDecryptionUtil;
+//import org.egov.user.domain.service.utils.EncryptionDecryptionUtil;
 import org.apache.commons.lang3.StringUtils;
 
 import org.apache.commons.lang3.StringUtils;
@@ -51,7 +51,8 @@ import java.util.regex.Pattern;
 
 @SpringBootApplication
 @Slf4j
-@Import({TracerConfiguration.class, EncryptionConfiguration.class})
+//@Import({TracerConfiguration.class, EncryptionConfiguration.class})
+@Import({TracerConfiguration.class})
 public class EgovUserApplication {
 
 

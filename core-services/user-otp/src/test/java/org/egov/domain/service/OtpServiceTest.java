@@ -48,7 +48,7 @@ public class OtpServiceTest {
 	public void test_should_validate_otp_request_for_user_login() {
 		final OtpRequest otpRequest = mock(OtpRequest.class);
 		when(otpRequest.isLoginRequestType()).thenReturn(true);
-		when(userRepository.fetchUser(nullable(String.class), nullable(String.class), nullable(String.class))).thenReturn(new User(1L, "foo@bar.com", "123"));
+		when(userRepository.fetchUser(nullable(String.class), nullable(String.class), nullable(String.class), nullable(String.class))).thenReturn(new User(1L, "foo@bar.com", "123"));
 		otpService.sendOtp(otpRequest);
 
 		verify(otpRequest).validate();
@@ -58,7 +58,7 @@ public class OtpServiceTest {
 	public void test_should_throwException_when_userAlreadyExist_IncaseOfRegister() {
 		final OtpRequest otpRequest = mock(OtpRequest.class);
 		when(otpRequest.isRegistrationRequestType()).thenReturn(true);
-		when(userRepository.fetchUser(nullable(String.class), nullable(String.class), nullable(String.class))).thenReturn(new User(1L, "foo@bar.com", "123"));
+		when(userRepository.fetchUser(nullable(String.class), nullable(String.class), nullable(String.class), nullable(String.class))).thenReturn(new User(1L, "foo@bar.com", "123"));
 		otpService.sendOtp(otpRequest);
 
 		verify(otpRequest).validate();
@@ -78,7 +78,7 @@ public class OtpServiceTest {
 	public void test_should_validate_otp_request_for_password_reset() {
 		final OtpRequest otpRequest = mock(OtpRequest.class);
 		when(otpRequest.isRegistrationRequestType()).thenReturn(false);
-		when(userRepository.fetchUser(nullable(String.class), nullable(String.class), nullable(String.class))).thenReturn(new User(1L, "foo@bar.com", "123"));
+		when(userRepository.fetchUser(nullable(String.class), nullable(String.class), nullable(String.class), nullable(String.class))).thenReturn(new User(1L, "foo@bar.com", "123"));
 
 		otpService.sendOtp(otpRequest);
 
@@ -125,7 +125,7 @@ public class OtpServiceTest {
 				.type(OtpRequestType.PASSWORD_RESET).userType("CITIZEN").build();
 		final String otpNumber = "otpNumber";
 		when(otpRepository.fetchOtp(otpRequest)).thenReturn(otpNumber);
-		when(userRepository.fetchUser("1234567890", "tenant", "CITIZEN")).thenReturn(new User(1L, "foo@bar.com",
+		when(userRepository.fetchUser("1234567890", null, "tenant", "CITIZEN")).thenReturn(new User(1L, "foo@bar.com",
 				"1234"));
 
 		otpService.sendOtp(otpRequest);
@@ -139,7 +139,7 @@ public class OtpServiceTest {
 				.type(OtpRequestType.PASSWORD_RESET).userType("CITIZEN").build();
 		final String otpNumber = "otpNumber";
 		when(otpRepository.fetchOtp(otpRequest)).thenReturn(otpNumber);
-		when(userRepository.fetchUser("1234567890", "tenant", "CITIZEN")).thenReturn(new User(1L, "foo@bar.com",
+		when(userRepository.fetchUser("1234567890", null, "tenant", "CITIZEN")).thenReturn(new User(1L, "foo@bar.com",
 				"123"));
 
 		otpService.sendOtp(otpRequest);

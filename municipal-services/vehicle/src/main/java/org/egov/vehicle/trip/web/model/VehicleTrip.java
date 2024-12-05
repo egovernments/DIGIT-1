@@ -25,7 +25,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 /**
- * Request schema of VehicleTrip.
+ * Request schema of VehicleTrip.  
  */
 @Validated
 @javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2020-12-23T12:08:13.326Z[GMT]")
@@ -146,3 +146,4 @@ public class VehicleTrip   {
   
  
 }
+

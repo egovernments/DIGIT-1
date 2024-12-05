@@ -41,6 +41,10 @@ public class SmsNotificationListener {
 	public void process(final HashMap<String, Object> record) {
 		List<String> emails = userRepository.getEmailsByMobileNo(config.getStateTenantId(),
 				(String) record.get(Constants.SMS_REQ_MOBILE_NO_KEY_NAME));
+		
+		if(emails.isEmpty())
+			emails.add((String) record.get(Constants.MSG_REQ_EMAIL_ID_KEY_NAME));
+		
 		if(!CollectionUtils.isEmpty(emails))
 			emailService
 					.sendEmail(getEmailReq(getValideEmails(emails), (String) record.get(Constants.SMS_REQ_MSG_KEY_NAME)));

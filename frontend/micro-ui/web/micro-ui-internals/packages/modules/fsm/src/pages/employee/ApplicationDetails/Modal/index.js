@@ -245,6 +245,7 @@ const ActionModal = ({ t, action, tenantId, state, id, closeModal, submitAction,
     setImageFile(e.target.files);
   }
 
+
   function addCommentToWorkflow(state, workflow, data) {
     workflow.comments = data.comments ? state.code + "~" + data.comments : state.code;
   }

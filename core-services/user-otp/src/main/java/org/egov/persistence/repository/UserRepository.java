@@ -29,12 +29,12 @@ public class UserRepository {
     @Autowired
     private RestTemplate restTemplate;
 
-    public User fetchUser(String mobileNumber, String tenantId, String userType) {
+    public User fetchUser(String mobileNumber, String emailId, String tenantId, String userType) {
         UserSearchRequest request = null;
         if (userType !=null && userType.equals("EMPLOYEE")) {
-            request = new UserSearchRequest(null, tenantId, userType, mobileNumber);
+            request = new UserSearchRequest(null, tenantId, userType, mobileNumber, emailId);
         } else {
-            request = new UserSearchRequest(mobileNumber, tenantId, userType, null);
+            request = new UserSearchRequest(null, tenantId, userType, mobileNumber, emailId);
 
         }
         ObjectMapper mapper = new ObjectMapper();

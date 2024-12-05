@@ -36,8 +36,6 @@ public class FSMQueryBuilder {
 
 	public static final String GET_VEHICLE_TRIPS_LIST = "SELECT * FROM eg_vehicle_trip_detail WHERE referenceno= ? and status='ACTIVE' order by createdtime desc ";
 
-	public static final String GET_APPLICATION_LIST="select applicationno from eg_fsm_application where oldapplicationno=? and tenantid=?";
-	
 	public String getFSMSearchQuery(FSMSearchCriteria criteria, String dsoId, List<Object> preparedStmtList) {
 
 		StringBuilder builder = new StringBuilder(QUERY);
@@ -53,11 +51,26 @@ public class FSMQueryBuilder {
 			}
 		}
 
+		/*
+		 * Enable part search by application number of fsm application
+		 */
 		List<String> applicationNumber = criteria.getApplicationNos();
-		if (!CollectionUtils.isEmpty(applicationNumber)) {
+		if (!CollectionUtils.isEmpty(applicationNumber) && (applicationNumber.stream()
+				.filter(checkappnumber -> checkappnumber.length() > 0).findFirst().orElse(null) != null)) {
+			boolean flag = false;
 			addClauseIfRequired(preparedStmtList, builder);
-			builder.append(" fsm.applicationNo IN (").append(createQuery(applicationNumber)).append(")");
-			addToPreparedStatement(preparedStmtList, applicationNumber);
+			builder.append(" ( ");
+			for (String applicationno : applicationNumber) {
+
+				if (flag)
+					builder.append(" OR ");
+				builder.append(" UPPER(fsm.applicationNo) like ?");
+				preparedStmtList.add('%' + org.apache.commons.lang3.StringUtils.upperCase(applicationno) + '%');
+				builder.append(" ESCAPE '_' ");
+				flag = true;
+
+			}
+			builder.append(" ) ");
 		}
 
 		List<String> applicationStatus = criteria.getApplicationStatus();
@@ -80,21 +93,6 @@ public class FSMQueryBuilder {
 			addClauseIfRequired(preparedStmtList, builder);
 			builder.append(" fsm.id IN (").append(createQuery(ids)).append(")");
 			addToPreparedStatement(preparedStmtList, ids);
-
-		}
-		
-		if (criteria.getApplicationType()!=null) {
-			addClauseIfRequired(preparedStmtList, builder);
-			builder.append(" fsm.applicationType=? ");
-			preparedStmtList.add(criteria.getApplicationType());
-
-		}
-		
-		List<String> oldApplicationNo = criteria.getOldApplicationNos();
-		if (!CollectionUtils.isEmpty(oldApplicationNo)) {
-			addClauseIfRequired(preparedStmtList, builder);
-			builder.append(" fsm.oldApplicationNo IN (").append(createQuery(oldApplicationNo)).append(")");
-			addToPreparedStatement(preparedStmtList, oldApplicationNo);
 
 		}
 

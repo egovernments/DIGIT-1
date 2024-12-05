@@ -151,14 +151,6 @@ public class VehicleRepository {
 				preparedStmtList.add(criteria.getTenantId());
 			}
 		}
-		
-		public List<String> fetchVehicleIdsWithNoVendor(@Valid VehicleSearchCriteria criteria) {
-
-			List<Object> preparedStmtList = new ArrayList<>();
-			String query = queryBuilder.getVehicleIdsWithNoVendorQuery(criteria, preparedStmtList);
-			List<String> ids = jdbcTemplate.query(query,preparedStmtList.toArray(),	new SingleColumnRowMapper<>(String.class));
-			return ids;
-		}
 
 		List<String> appStates = criteria.getApplicationStatus();
 
@@ -167,71 +159,6 @@ public class VehicleRepository {
 			builder.append(" applicationstatus IN (").append(createQuery(appStates)).append(")");
 			addToPreparedStatement(preparedStmtList, appStates);
 		}
-		
-		public List<Map<String, Object>> fetchStatusCount(VehicleSearchCriteria criteria) {
-    		List<Object> preparedStmtList = new ArrayList<>();
-    		String query = getSearchQuery(criteria, preparedStmtList);
-    		return jdbcTemplate.queryForList(query, preparedStmtList.toArray());
-    	}
-
-		public List<VehicleTripDetail> fetchVehicleTripDetailsByReferenceNo(VehicleTripSearchCriteria vehicleTripSearchCriteria) {
-			StringBuilder builder = new StringBuilder(QUERY_VEHICLE_TRIP_DETAIL);
-			List<Object> preparedStmtList = new ArrayList<>();
-			if (!CollectionUtils.isEmpty(vehicleTripSearchCriteria.getRefernceNos())) {
-				addClauseIfRequired(preparedStmtList, builder);
-				builder.append(" referenceno IN (").append(createQuery(vehicleTripSearchCriteria.getRefernceNos())).append(")");
-				addToPreparedStatement(preparedStmtList, vehicleTripSearchCriteria.getRefernceNos());
-			}
-			List<VehicleTripDetail> vehicleTrips = new ArrayList();
-			try {
-				vehicleTrips = jdbcTemplate.query(builder.toString(), preparedStmtList.toArray(), vehicleTripMapper);
-			} catch (IllegalArgumentException e) {
-				throw new CustomException(ErrorConstants.PARSING_ERROR, "Failed to parse response of VehicleTripIntance");
-			}
-			return vehicleTrips;
-		}
-		
-
-		private String getSearchQuery(VehicleSearchCriteria criteria, List<Object> preparedStmtList) {
-			StringBuilder builder = new StringBuilder(Query_SEARCH_VEHICLE_LOG);
-
-			if (criteria.getTenantId() != null) {
-				if (criteria.getTenantId().split("\\.").length == 1) {
-					addClauseIfRequired(preparedStmtList, builder);
-					builder.append(" tenantid like ?");
-					preparedStmtList.add('%' + criteria.getTenantId() + '%');
-				} else {
-					addClauseIfRequired(preparedStmtList, builder);
-					builder.append(" tenantid=? ");
-					preparedStmtList.add(criteria.getTenantId());
-				}
-			}
-
-			List<String> appStates = criteria.getApplicationStatus();
-
-			if (!CollectionUtils.isEmpty(appStates)) {
-				addClauseIfRequired(preparedStmtList, builder);
-				builder.append(" applicationstatus IN (").append(createQuery(appStates)).append(")");
-				addToPreparedStatement(preparedStmtList, appStates);
-			}
-
-			builder.append(" group by applicationstatus ");
-
-			return builder.toString();
-
-		}
-		
-		private void addToPreparedStatement(List<Object> preparedStmtList, List<String> ids) {
-			ids.forEach(id -> {
-				preparedStmtList.add(id);
-			});
-
-		}
-		
-		private String addPaginationClause(StringBuilder builder, List<Object> preparedStmtList,
-				VehicleTripSearchCriteria criteria) {
-      
-			log.info("criteria.getLimit() :::: " + criteria.getLimit());
 
 		builder.append(" group by applicationstatus ");
 

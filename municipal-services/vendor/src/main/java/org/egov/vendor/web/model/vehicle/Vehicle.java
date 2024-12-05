@@ -2,7 +2,6 @@ package org.egov.vendor.web.model.vehicle;
 
 
 import org.egov.vendor.web.model.AuditDetails;
-import javax.validation.constraints.Size;
 import org.egov.vendor.web.model.user.User;
 import org.hibernate.validator.constraints.SafeHtml;
 import org.springframework.validation.annotation.Validated;
@@ -89,9 +88,6 @@ public class Vehicle {
 	@SafeHtml
 	@JsonProperty("source")
 	private String source = null;
-	
-	@JsonProperty("vendorVehicleStatus")
-	private StatusEnum vendorVehicleStatus = null;
 
 	@JsonProperty("vendorVehicleStatus")
 	private StatusEnum vendorVehicleStatus = null;

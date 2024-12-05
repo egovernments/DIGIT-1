@@ -1,16 +1,26 @@
 package org.egov.user.repository.rowmapper;
 
+import org.egov.tracer.model.CustomException;
 import org.egov.user.domain.model.User;
 import org.egov.user.domain.model.enums.BloodGroup;
 import org.egov.user.domain.model.enums.Gender;
 import org.egov.user.domain.model.enums.GuardianRelation;
 import org.egov.user.domain.model.enums.UserType;
+import org.postgresql.util.PGobject;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.RowMapper;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+
+import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class UserRowMapper implements RowMapper<User> {
+	
+	@Autowired
+	private ObjectMapper mapper;
 
     @Override
     public User mapRow(final ResultSet rs, final int rowNum) throws SQLException {
@@ -22,6 +32,22 @@ public class UserRowMapper implements RowMapper<User> {
                 .pan(rs.getString("pan")).aadhaarNumber(rs.getString("aadhaarnumber")).createdBy(rs.getLong("createdby")).createdDate(rs.getTimestamp("createddate"))
                 .guardian(rs.getString("guardian")).signature(rs.getString("signature"))
                 .accountLocked(rs.getBoolean("accountlocked")).photo(rs.getString("photo")).identificationMark(rs.getString("identificationmark")).uuid(rs.getString("uuid")).alternateMobileNumber(rs.getString("alternatemobilenumber")).build();
+        
+        PGobject pgObj = (PGobject) rs.getObject("additionaldetails");
+        ObjectNode additionalDetails = null;
+        if (pgObj != null) {
+
+			try {
+				additionalDetails = mapper.readValue(pgObj.getValue(), ObjectNode.class);
+			} catch (IOException ex) {
+				// TODO Auto-generated catch block
+				throw new CustomException("PARSING ERROR", "The additionalDetail json cannot be parsed");
+			}
+		} else {
+			additionalDetails = mapper.createObjectNode();
+		}
+        user.setAdditionalDetails(additionalDetails);
+        
 
         for (UserType type : UserType.values()) {
             if (type.toString().equals(rs.getString("type"))) {

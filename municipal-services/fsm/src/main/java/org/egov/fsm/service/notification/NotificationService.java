@@ -27,7 +27,6 @@ import org.egov.fsm.web.model.workflow.Action;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
-import org.egov.fsm.util.FSMUtil;
 
 import com.jayway.jsonpath.JsonPath;
 
@@ -48,9 +47,6 @@ public class NotificationService {
 
 	@Autowired
 	private UserService userService;
-	
-	@Autowired
-	private FSMUtil fsmUtil;
 
 	@Autowired
 	public NotificationService(FSMConfiguration config, ServiceRequestRepository serviceRequestRepository) {
@@ -85,7 +81,7 @@ public class NotificationService {
 	 * trigger points as that of sms notifs.
 	 * 
 	 * Assumption - The fsmRequest received will always contain only one fsm.
- 	 * 
+	 * 
 	 * @param request
 	 * @return
 	 */
@@ -103,7 +99,6 @@ public class NotificationService {
 
 		Map<String, String> mobileNumberToMsg = smsRequests.stream()
 				.collect(Collectors.toMap(SMSRequest::getMobileNumber, SMSRequest::getMessage));
-		
 		for (String mobile : mobileNumbers) {
 			if (null == mapOfPhnoAndUUIDs.get(mobile) || null == mobileNumberToMsg.get(mobile)) {
 				log.error("No UUID/SMS for mobile {} skipping event", mobile);
@@ -131,7 +126,7 @@ public class NotificationService {
 	/**
 	 * Fetches UUIDs of CITIZENs based on the phone number.
 	 * 
- 	 * @param mobileNumbers
+	 * @param mobileNumbers
 	 * @param requestInfo
 	 * @param tenantId
 	 * @return
@@ -332,77 +327,6 @@ public class NotificationService {
 					util.sendEventNotification(eventRequest);
 			}
 		} else {
-			log.info("Vehicle Capacity or no of trips is is not updated not sending SMS here::");
-		}
-	}
-
-	/**
-	 * Creates and send the SMS if vehicle capacity has been updated
-	 * @param request
-	 */
-	public void process(FSMRequest fsmRequest,FSM oldFSM) {
-		FSM newFSM=fsmRequest.getFsm();
-		log.info("Old Vehicle Capacity:: " + oldFSM.getVehicleCapacity());
-		log.info("New Vehicle Capacity:: " + newFSM.getVehicleCapacity());
-		log.info("Old No of trips :: " + oldFSM.getNoOfTrips());
-		log.info("New No of trips :: " + newFSM.getNoOfTrips());
-
-		if(null!=oldFSM.getVehicleCapacity() && null!=newFSM.getVehicleCapacity() 
-				&& ( (!newFSM.getVehicleCapacity().equalsIgnoreCase(oldFSM.getVehicleCapacity())) ||
-						(!newFSM.getNoOfTrips().equals(oldFSM.getNoOfTrips()))
-					)
-		  ) {
-
-			log.info("Vehicle Capacity or no of trips is updated sending SMS here::");
-
-			String tenantId = fsmRequest.getFsm().getTenantId();
-			String localizationMessages = util.getLocalizationMessages(tenantId, fsmRequest.getRequestInfo());
-			String messageCode =  FSMConstants.FSM_SMS_CITIZEN_NO_OF_TRIPS_VEHICLE_CAPACITY_CHANGE;
-
-			List<SMSRequest> smsRequests = new LinkedList<>();
-			String message = util.getCustomizedMsg(fsmRequest, localizationMessages,messageCode);
-			log.info("SMS message to be sent:: "+ message);
-			Map<String, String> mobileNumberToOwner = getUserList(fsmRequest);
-			smsRequests.addAll(util.createSMSRequest(message, mobileNumberToOwner));
-
-			List<Event> events = new ArrayList<>();
-			Set<String> mobileNumbers = smsRequests.stream().map(SMSRequest::getMobileNumber).collect(Collectors.toSet());
-			Map<String, String> mapOfPhnoAndUUIDs = fetchUserUUIDs(mobileNumbers, fsmRequest.getRequestInfo(),
-					fsmRequest.getFsm().getTenantId());
-			Map<String, String> mobileNumberToMsg = smsRequests.stream()
-					.collect(Collectors.toMap(SMSRequest::getMobileNumber, SMSRequest::getMessage));
-
-			for (String mobile : mobileNumbers) {
-
-				List<String> toUsers = new ArrayList<>();
-				toUsers.add(mapOfPhnoAndUUIDs.get(mobile));
-				Recepient recepient = Recepient.builder().toUsers(toUsers).toRoles(null).build();
-				Action action = null;
-
-				events.add(Event.builder().tenantId(fsmRequest.getFsm().getTenantId()).description(mobileNumberToMsg.get(mobile))
-						.eventType(FSMConstants.USREVENTS_EVENT_TYPE).name(FSMConstants.USREVENTS_EVENT_NAME)
-						.postedBy(FSMConstants.USREVENTS_EVENT_POSTEDBY)
-						.source(Source.WEBAPP)
-						.recepient(recepient)
-						.eventDetails(null).actions(action).build());
-			}
-
-
-			/* Commenting out the SMS code as only notification is required for SAN-1024
-			 * if (null != config.getIsSMSEnabled()) { if (config.getIsSMSEnabled()) { if
-			 * (!CollectionUtils.isEmpty(smsRequests)) util.sendSMS(smsRequests,
-			 * config.getIsSMSEnabled()); } }
-			 */
-
-			if (null != config.getIsUserEventsNotificationEnabled()) {
-				if (config.getIsUserEventsNotificationEnabled()) {
-					EventRequest eventRequest = EventRequest.builder().requestInfo(fsmRequest.getRequestInfo()).events(events).build();
-					if (null != eventRequest)
-						util.sendEventNotification(eventRequest);
-				}
-			}
-
-		}else {
 			log.info("Vehicle Capacity or no of trips is is not updated not sending SMS here::");
 		}
 	}

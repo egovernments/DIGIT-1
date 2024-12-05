@@ -32,6 +32,7 @@ public class NotificationService {
 
 	@Autowired
 	private UserService userService;
+
 	@Autowired
 	public NotificationService(VehicleConfiguration config) {
 		this.config = config;

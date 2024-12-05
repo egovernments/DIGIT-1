@@ -67,6 +67,8 @@ public class UserSearchResponseContent {
     private Date dob;
     @JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss")
     private Date pwdExpiryDate;
+    
+    private Object additionalDetails;
 
     public UserSearchResponseContent(User user) {
 
@@ -102,6 +104,7 @@ public class UserSearchResponseContent {
         this.uuid = user.getUuid();
         this.addresses = user.getAddresses();
         this.alternatemobilenumber=user.getAlternateMobileNumber();
+        this.additionalDetails = user.getAdditionalDetails();
         mapPermanentAddress(user);
         mapCorrespondenceAddress(user);
     }

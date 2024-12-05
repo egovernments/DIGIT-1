@@ -139,8 +139,6 @@ public class DSOService {
 				if (!fsmRequest.getWorkflow().getAssignes().get(0).equalsIgnoreCase(vendor.getOwner().getUuid())) {
 					throw new CustomException(FSMErrorConstants.INVALID_DSO, " Assignee Does not belong to DSO!");
 				}
-	
-
 			}
 		}
 

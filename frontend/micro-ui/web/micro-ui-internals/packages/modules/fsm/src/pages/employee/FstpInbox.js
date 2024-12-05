@@ -51,7 +51,6 @@ const FstpInbox = () => {
     },
     { enabled: searchParams?.name?.length > 1 }
   );
-
   let filters = {
     businessService: "FSM_VEHICLE_TRIP",
     refernceNos: applicationData !== undefined && searchParams?.refernceNos?.length > 0 ? applicationData?.applicationNo || "null" : "",
